@@ -87,6 +87,11 @@ async function executeGenerate(
     '.feature'
   );
 
+  // Show output destination
+  if (options.output) {
+    logger.info(`Output: ${outputPath}`);
+  }
+
   const saveSpinner = logger.spinner('Saving file...');
   await writeTextFile(outputPath, gherkin);
   saveSpinner.succeed(`Created: ${outputPath}`);

@@ -69,9 +69,11 @@ export function resolveOutputPath(
   newExtension: string
 ): string {
   if (outputPath) {
-    return outputPath;
+    // Resolve to absolute path (handles both relative and absolute paths)
+    return path.resolve(outputPath);
   }
 
+  // Generate output path in the same directory as input file
   const parsedPath = path.parse(inputPath);
   return path.join(parsedPath.dir, `${parsedPath.name}${newExtension}`);
 }
