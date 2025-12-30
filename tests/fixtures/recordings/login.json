@@ -1,0 +1,80 @@
+{
+  "title": "Login flow",
+  "steps": [
+    {
+      "type": "setViewport",
+      "width": 1280,
+      "height": 720,
+      "deviceScaleFactor": 1,
+      "isMobile": false,
+      "hasTouch": false,
+      "isLandscape": false
+    },
+    {
+      "type": "navigate",
+      "url": "https://example.com/login",
+      "assertedEvents": [
+        {
+          "type": "navigation",
+          "url": "https://example.com/login",
+          "title": "Login Page"
+        }
+      ]
+    },
+    {
+      "type": "click",
+      "target": "main",
+      "selectors": [
+        ["#email-input"],
+        ["input[name='email']"]
+      ],
+      "offsetX": 100,
+      "offsetY": 20
+    },
+    {
+      "type": "change",
+      "value": "test@example.com",
+      "selectors": [
+        ["#email-input"],
+        ["input[name='email']"]
+      ],
+      "target": "main"
+    },
+    {
+      "type": "click",
+      "target": "main",
+      "selectors": [
+        ["#password-input"],
+        ["input[name='password']"]
+      ],
+      "offsetX": 100,
+      "offsetY": 20
+    },
+    {
+      "type": "change",
+      "value": "password123",
+      "selectors": [
+        ["#password-input"],
+        ["input[name='password']"]
+      ],
+      "target": "main"
+    },
+    {
+      "type": "click",
+      "target": "main",
+      "selectors": [
+        ["#login-button"],
+        ["button[type='submit']"]
+      ],
+      "offsetX": 50,
+      "offsetY": 15
+    },
+    {
+      "type": "waitForElement",
+      "selectors": [
+        [".dashboard"],
+        ["[data-testid='dashboard']"]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "rectospec",
+  "version": "0.1.0",
+  "description": "Chrome Recorder to Gherkin to Playwright - AI-powered test automation tool",
+  "keywords": [
+    "playwright",
+    "gherkin",
+    "bdd",
+    "chrome-recorder",
+    "testing",
+    "ai",
+    "test-automation"
+  ],
+  "author": "Kenta Kataoka",
+  "license": "MIT",
+  "bin": {
+    "rectospec": "./dist/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm run test"
+  },
+  "dependencies": {
+    "ai": "^3.4.0",
+    "@ai-sdk/google": "^0.0.52",
+    "zod": "^3.23.8",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.7.2",
+    "tsup": "^8.3.5",
+    "vitest": "^2.1.5",
+    "@vitest/coverage-v8": "^2.1.5",
+    "eslint": "^9.15.0",
+    "@typescript-eslint/eslint-plugin": "^8.15.0",
+    "@typescript-eslint/parser": "^8.15.0",
+    "prettier": "^3.3.3"
+  }
+}
