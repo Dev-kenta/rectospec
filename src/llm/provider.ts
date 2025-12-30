@@ -17,7 +17,7 @@ export interface LLMConfig {
  * デフォルトモデル設定
  */
 const DEFAULT_MODELS = {
-  google: 'gemini-2.0-flash-exp',
+  google: 'gemini-2.0-flash-lite',
 };
 
 /**
