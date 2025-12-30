@@ -13,14 +13,14 @@ export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
     if (error instanceof Error) {
       if ('code' in error && error.code === 'ENOENT') {
         throw new FileSystemError(
-          `ファイルが見つかりません: ${filePath}`
+          `File not found: ${filePath}`
         );
       }
       throw new FileSystemError(
-        `ファイルの読み込みに失敗しました: ${error.message}`
+        `Failed to read file: ${error.message}`
       );
     }
-    throw new FileSystemError('不明なエラーが発生しました');
+    throw new FileSystemError('Unknown error occurred');
   }
 }
 
@@ -32,7 +32,7 @@ export async function writeTextFile(
   content: string
 ): Promise<void> {
   try {
-    // ディレクトリが存在しない場合は作成
+    // Create directory if it doesn't exist
     const dir = path.dirname(filePath);
     await fs.mkdir(dir, { recursive: true });
 
@@ -40,10 +40,10 @@ export async function writeTextFile(
   } catch (error) {
     if (error instanceof Error) {
       throw new FileSystemError(
-        `ファイルの書き込みに失敗しました: ${error.message}`
+        `Failed to write file: ${error.message}`
       );
     }
-    throw new FileSystemError('不明なエラーが発生しました');
+    throw new FileSystemError('Unknown error occurred');
   }
 }
 

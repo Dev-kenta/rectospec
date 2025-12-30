@@ -1,8 +1,9 @@
 import { Command } from 'commander';
 import { config } from 'dotenv';
 import { setupGenerateCommand } from './commands/generate.js';
+import { setupInitCommand } from './commands/init.js';
 
-// .env ファイルを読み込み
+// Load .env file
 config();
 
 const program = new Command();
@@ -12,14 +13,16 @@ program
   .description('Chrome Recorder to Gherkin to Playwright - AI-powered test automation tool')
   .version('0.1.0');
 
-// コマンドをセットアップ
+// Setup commands
+setupInitCommand(program);
 setupGenerateCommand(program);
 
-// ヘルプテキストをカスタマイズ
+// Customize help text
 program.addHelpText(
   'after',
   `
 Examples:
+  $ rectospec init
   $ rectospec generate recording.json
   $ rectospec generate recording.json -o test.feature
   $ rectospec generate recording.json --lang en
@@ -29,9 +32,9 @@ Documentation:
   https://github.com/rectospec/rectospec
 
 Get started:
-  1. 環境変数を設定: export GOOGLE_GENERATIVE_AI_API_KEY=your-key
-  2. Chrome Recorder でブラウザ操作を記録してJSONエクスポート
-  3. rectospec generate recording.json でGherkin生成
+  1. Setup: rectospec init
+  2. Record browser actions with Chrome Recorder and export as JSON
+  3. Generate Gherkin: rectospec generate recording.json
 `
 );
 
