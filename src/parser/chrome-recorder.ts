@@ -16,7 +16,7 @@ export function parseRecording(json: unknown): ParsedRecording {
 
   if (!result.success) {
     throw new ParserError(
-      `Chrome Recorder JSON の形式が不正です:\n${result.error.message}`
+      `Invalid Chrome Recorder JSON format:\n${result.error.message}`
     );
   }
 

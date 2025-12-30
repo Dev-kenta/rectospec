@@ -17,13 +17,13 @@ interface GenerateOptions {
 export function setupGenerateCommand(program: Command): void {
   program
     .command('generate')
-    .description('Chrome Recorder JSONからGherkinファイルを生成します')
-    .argument('<recording-file>', 'Chrome Recorder JSONファイルのパス')
-    .option('-o, --output <path>', '出力ファイルパス')
-    .option('--lang <language>', '言語設定 (ja/en)', 'ja')
-    .option('--no-edge-cases', 'エッジケースシナリオを生成しない')
-    .option('-p, --provider <provider>', 'LLMプロバイダー', 'google')
-    .option('-m, --model <model>', 'モデル名')
+    .description('Generate Gherkin file from Chrome Recorder JSON')
+    .argument('<recording-file>', 'Chrome Recorder JSON file path')
+    .option('-o, --output <path>', 'Output file path')
+    .option('--lang <language>', 'Language (ja/en)', 'ja')
+    .option('--no-edge-cases', 'Do not generate edge case scenarios')
+    .option('-p, --provider <provider>', 'LLM provider', 'google')
+    .option('-m, --model <model>', 'Model name')
     .action(async (recordingFile: string, options: GenerateOptions) => {
       try {
         await executeGenerate(recordingFile, options);
@@ -32,11 +32,11 @@ export function setupGenerateCommand(program: Command): void {
           logger.error(error.message);
           process.exit(1);
         } else if (error instanceof Error) {
-          logger.error(`予期しないエラーが発生しました: ${error.message}`);
+          logger.error(`Unexpected error occurred: ${error.message}`);
           console.error(error.stack);
           process.exit(1);
         } else {
-          logger.error('不明なエラーが発生しました');
+          logger.error('Unknown error occurred');
           process.exit(1);
         }
       }
@@ -47,26 +47,26 @@ async function executeGenerate(
   recordingFile: string,
   options: GenerateOptions
 ): Promise<void> {
-  logger.header('RecToSpec - Gherkin生成');
+  logger.header('RecToSpec - Gherkin Generation');
 
-  // 1. Recording JSON を読み込み
-  const spinner = logger.spinner('Recording JSONを読み込んでいます...');
+  // 1. Load Recording JSON
+  const spinner = logger.spinner('Loading Recording JSON...');
   const recordingPath = path.resolve(recordingFile);
   const recordingJson = await readJsonFile(recordingPath);
-  spinner.succeed('Recording JSONを読み込みました');
+  spinner.succeed('Recording JSON loaded');
 
-  // 2. パース
-  const parseSpinner = logger.spinner('Recording JSONを解析しています...');
+  // 2. Parse
+  const parseSpinner = logger.spinner('Parsing Recording JSON...');
   const parsedRecording = parseRecording(recordingJson);
   parseSpinner.succeed(
-    `Recording JSONを解析しました (${parsedRecording.steps.length} ステップ)`
+    `Recording JSON parsed (${parsedRecording.steps.length} steps)`
   );
 
-  logger.info(`タイトル: ${parsedRecording.title}`);
-  logger.info(`開始URL: ${parsedRecording.metadata.url}`);
+  logger.info(`Title: ${parsedRecording.title}`);
+  logger.info(`Start URL: ${parsedRecording.metadata.url}`);
 
-  // 3. Gherkin生成
-  const gherkinSpinner = logger.spinner('Gherkinを生成しています...');
+  // 3. Generate Gherkin
+  const gherkinSpinner = logger.spinner('Generating Gherkin...');
   const gherkin = await generateGherkin(
     parsedRecording,
     {
@@ -78,21 +78,21 @@ async function executeGenerate(
       model: options.model,
     }
   );
-  gherkinSpinner.succeed('Gherkinを生成しました');
+  gherkinSpinner.succeed('Gherkin generated');
 
-  // 4. ファイル保存
+  // 4. Save file
   const outputPath = resolveOutputPath(
     recordingPath,
     options.output,
     '.feature'
   );
 
-  const saveSpinner = logger.spinner('ファイルを保存しています...');
+  const saveSpinner = logger.spinner('Saving file...');
   await writeTextFile(outputPath, gherkin);
-  saveSpinner.succeed(`作成完了: ${outputPath}`);
+  saveSpinner.succeed(`Created: ${outputPath}`);
 
-  // 5. 完了メッセージ
+  // 5. Completion message
   console.log('');
-  logger.success('Gherkinファイルの生成が完了しました');
-  logger.info(`次のステップ: rectospec compile ${outputPath}`);
+  logger.success('Gherkin file generated successfully');
+  logger.info(`Next step: rectospec compile ${outputPath}`);
 }
