@@ -1,5 +1,5 @@
 /**
- * カスタムエラークラス
+ * Custom error classes
  */
 
 export class RecToSpecError extends Error {

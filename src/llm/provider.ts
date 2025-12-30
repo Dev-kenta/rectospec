@@ -6,7 +6,7 @@ import { buildGherkinPrompt, GherkinGenerationOptions } from './prompts/gherkin-
 import { configManager } from '../config/manager.js';
 
 /**
- * LLM プロバイダー設定
+ * LLM provider configuration
  */
 export interface LLMConfig {
   provider: 'google';
@@ -14,14 +14,14 @@ export interface LLMConfig {
 }
 
 /**
- * デフォルトモデル設定
+ * Default model settings
  */
 const DEFAULT_MODELS = {
   google: 'gemini-2.0-flash-lite',
 };
 
 /**
- * APIキーを取得（環境変数 > 設定ファイル）
+ * Get API key (priority: environment variable > config file)
  */
 async function getApiKey(provider: 'google'): Promise<string> {
   const envVars = {
@@ -53,7 +53,7 @@ async function getApiKey(provider: 'google'): Promise<string> {
 }
 
 /**
- * Gherkin を生成
+ * Generate Gherkin
  */
 export async function generateGherkin(
   recording: ParsedRecording,
@@ -77,7 +77,7 @@ export async function generateGherkin(
       maxTokens: 4000,
     });
 
-    // コードブロックから Gherkin を抽出
+    // Extract Gherkin from code block
     const gherkin = extractGherkinFromResponse(text);
 
     return gherkin;
@@ -96,15 +96,15 @@ export async function generateGherkin(
 }
 
 /**
- * LLMレスポンスからGherkinコードを抽出
+ * Extract Gherkin code from LLM response
  */
 function extractGherkinFromResponse(response: string): string {
-  // コードブロック内のGherkinを抽出
+  // Extract Gherkin from code block
   const codeBlockMatch = response.match(/```gherkin\n([\s\S]*?)\n```/);
   if (codeBlockMatch) {
     return codeBlockMatch[1].trim();
   }
 
-  // コードブロックがない場合は、そのまま返す
+  // Return as is if no code block
   return response.trim();
 }

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 /**
- * プロバイダー名の型
+ * Provider name type
  */
 export type ProviderName = 'google' | 'anthropic';
 
 /**
- * 設定ファイルのスキーマ
+ * Configuration file schema
  */
 export const ConfigSchema = z.object({
   llm: z.object({
@@ -30,12 +30,12 @@ export const ConfigSchema = z.object({
 });
 
 /**
- * 設定の型
+ * Configuration type
  */
 export type RecToSpecConfig = z.infer<typeof ConfigSchema>;
 
 /**
- * 設定ファイルの部分更新用の型
+ * Partial configuration type for updates
  */
 export type PartialConfig = Partial<{
   llm: Partial<RecToSpecConfig['llm']>;

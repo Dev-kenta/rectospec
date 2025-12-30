@@ -6,7 +6,7 @@ export interface GherkinGenerationOptions {
 }
 
 /**
- * Gherkin 生成用のプロンプトを構築
+ * Build prompt for Gherkin generation
  */
 export function buildGherkinPrompt(
   recording: ParsedRecording,

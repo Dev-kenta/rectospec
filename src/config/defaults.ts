@@ -1,12 +1,12 @@
 import { RecToSpecConfig } from './types.js';
 
 /**
- * デフォルト設定
+ * Default configuration
  */
 export const DEFAULT_CONFIG: RecToSpecConfig = {
   llm: {
     provider: 'google',
-    model: undefined, // プロバイダーのデフォルトモデルを使用
+    model: undefined, // Use provider's default model
   },
   language: 'ja',
   output: {

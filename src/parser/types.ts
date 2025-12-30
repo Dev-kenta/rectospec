@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 /**
- * Chrome Recorder のステップタイプ
+ * Chrome Recorder step type
  */
 export const ChromeRecorderStepSchema = z.object({
   type: z.enum([
@@ -48,7 +48,7 @@ export const ChromeRecorderStepSchema = z.object({
 });
 
 /**
- * Chrome Recorder の記録全体
+ * Chrome Recorder full recording
  */
 export const ChromeRecorderSchema = z.object({
   title: z.string(),
@@ -60,7 +60,7 @@ export type ChromeRecorderStep = z.infer<typeof ChromeRecorderStepSchema>;
 export type ChromeRecording = z.infer<typeof ChromeRecorderSchema>;
 
 /**
- * パース済みアクション（簡略化された形式）
+ * Parsed action (simplified format)
  */
 export interface ParsedAction {
   type: 'navigate' | 'click' | 'type' | 'change' | 'keyDown' | 'scroll' | 'wait';
@@ -71,7 +71,7 @@ export interface ParsedAction {
 }
 
 /**
- * パース済み記録
+ * Parsed recording
  */
 export interface ParsedRecording {
   title: string;

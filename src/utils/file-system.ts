@@ -3,7 +3,7 @@ import path from 'path';
 import { FileSystemError } from './errors.js';
 
 /**
- * JSON ファイルを読み込む
+ * Read JSON file
  */
 export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
   try {
@@ -25,7 +25,7 @@ export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
 }
 
 /**
- * テキストファイルを書き込む
+ * Write text file
  */
 export async function writeTextFile(
   filePath: string,
@@ -48,7 +48,7 @@ export async function writeTextFile(
 }
 
 /**
- * ファイルの存在を確認
+ * Check if file exists
  */
 export async function fileExists(filePath: string): Promise<boolean> {
   try {
@@ -60,8 +60,8 @@ export async function fileExists(filePath: string): Promise<boolean> {
 }
 
 /**
- * 出力ファイルパスを解決
- * 入力ファイル名から拡張子を変更して出力ファイル名を生成
+ * Resolve output file path
+ * Generate output filename by changing extension from input filename
  */
 export function resolveOutputPath(
   inputPath: string,

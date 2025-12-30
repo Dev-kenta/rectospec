@@ -2,8 +2,8 @@ import chalk from 'chalk';
 import ora, { Ora } from 'ora';
 
 /**
- * ロガークラス
- * CLIでの見やすいログ出力を提供
+ * Logger class
+ * Provides readable log output for CLI
  */
 class Logger {
   info(message: string): void {
@@ -27,14 +27,14 @@ class Logger {
   }
 
   /**
-   * ヘッダー表示
+   * Display header
    */
   header(message: string): void {
     console.log(chalk.bold.cyan(`\n${message}\n${'='.repeat(message.length)}`));
   }
 
   /**
-   * セクション表示
+   * Display section
    */
   section(message: string): void {
     console.log(chalk.bold(`\n${message}`));

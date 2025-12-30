@@ -6,17 +6,17 @@ import { DEFAULT_CONFIG } from './defaults.js';
 import { ConfigError } from '../utils/errors.js';
 
 /**
- * 設定ファイルのパス
+ * Configuration file paths
  */
 const CONFIG_DIR = path.join(os.homedir(), '.rectospec');
 const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
 
 /**
- * 設定管理クラス
+ * Configuration manager class
  */
 export class ConfigManager {
   /**
-   * 設定ファイルが存在するか確認
+   * Check if configuration file exists
    */
   async exists(): Promise<boolean> {
     try {
@@ -28,7 +28,7 @@ export class ConfigManager {
   }
 
   /**
-   * 設定を読み込む
+   * Load configuration
    */
   async load(): Promise<RecToSpecConfig> {
     try {
@@ -61,7 +61,7 @@ export class ConfigManager {
   }
 
   /**
-   * 設定を保存
+   * Save configuration
    */
   async save(config: RecToSpecConfig): Promise<void> {
     try {
@@ -83,7 +83,7 @@ export class ConfigManager {
   }
 
   /**
-   * 設定を更新（部分更新）
+   * Update configuration (partial update)
    */
   async update(partialConfig: PartialConfig): Promise<RecToSpecConfig> {
     const currentConfig = await this.load();
@@ -114,7 +114,7 @@ export class ConfigManager {
   }
 
   /**
-   * APIキーを保存
+   * Save API key
    */
   async saveApiKey(provider: ProviderName, apiKey: string): Promise<void> {
     await this.update({
@@ -127,10 +127,10 @@ export class ConfigManager {
   }
 
   /**
-   * APIキーを取得（優先順位: 環境変数 > .env > 設定ファイル）
+   * Get API key (priority: environment variable > .env > config file)
    */
   async getApiKey(provider: ProviderName): Promise<string | undefined> {
-    // 1. 環境変数をチェック
+    // 1. Check environment variable
     const envVars: Record<ProviderName, string> = {
       google: 'GOOGLE_GENERATIVE_AI_API_KEY',
       anthropic: 'ANTHROPIC_API_KEY',
@@ -141,13 +141,13 @@ export class ConfigManager {
       return envKey;
     }
 
-    // 2. 設定ファイルをチェック
+    // 2. Check config file
     const config = await this.load();
     return config.llm.apiKeys?.[provider];
   }
 
   /**
-   * 設定ファイルのパスを取得
+   * Get configuration file path
    */
   getConfigPath(): string {
     return CONFIG_FILE;
@@ -155,6 +155,6 @@ export class ConfigManager {
 }
 
 /**
- * シングルトンインスタンス
+ * Singleton instance
  */
 export const configManager = new ConfigManager();

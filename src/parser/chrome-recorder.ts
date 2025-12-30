@@ -8,10 +8,10 @@ import {
 import { ParserError } from '../utils/errors.js';
 
 /**
- * Chrome Recorder JSON を検証してパース
+ * Validate and parse Chrome Recorder JSON
  */
 export function parseRecording(json: unknown): ParsedRecording {
-  // Zodでスキーマ検証
+  // Validate schema with Zod
   const result = ChromeRecorderSchema.safeParse(json);
 
   if (!result.success) {
@@ -22,12 +22,12 @@ export function parseRecording(json: unknown): ParsedRecording {
 
   const recording: ChromeRecording = result.data;
 
-  // ステップを簡略化されたアクションに変換
+  // Convert steps to simplified actions
   const steps: ParsedAction[] = recording.steps
     .map((step) => convertStepToAction(step))
     .filter((action): action is ParsedAction => action !== null);
 
-  // 開始URLを取得
+  // Get start URL
   const navigateStep = recording.steps.find((s) => s.type === 'navigate');
   const startUrl = navigateStep?.url || 'unknown';
 
@@ -42,7 +42,7 @@ export function parseRecording(json: unknown): ParsedRecording {
 }
 
 /**
- * Chrome Recorder のステップを ParsedAction に変換
+ * Convert Chrome Recorder step to ParsedAction
  */
 function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
   const selector = extractSelector(step.selectors);
@@ -52,7 +52,7 @@ function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
       return {
         type: 'navigate',
         url: step.url,
-        description: `ページ「${step.url}」に移動`,
+        description: `Navigate to page "${step.url}"`,
       };
 
     case 'click':
@@ -60,8 +60,8 @@ function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
         type: 'click',
         selector,
         description: selector
-          ? `要素「${selector}」をクリック`
-          : 'クリック操作',
+          ? `Click element "${selector}"`
+          : 'Click operation',
       };
 
     case 'change':
@@ -70,21 +70,21 @@ function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
         selector,
         value: step.value,
         description: selector
-          ? `要素「${selector}」に「${step.value}」を入力`
-          : `「${step.value}」を入力`,
+          ? `Enter "${step.value}" in element "${selector}"`
+          : `Enter "${step.value}"`,
       };
 
     case 'keyDown':
       return {
         type: 'keyDown',
         value: step.key,
-        description: `キー「${step.key}」を押下`,
+        description: `Press key "${step.key}"`,
       };
 
     case 'scroll':
       return {
         type: 'scroll',
-        description: 'スクロール操作',
+        description: 'Scroll operation',
       };
 
     case 'waitForElement':
@@ -92,10 +92,10 @@ function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
       return {
         type: 'wait',
         selector,
-        description: selector ? `要素「${selector}」を待機` : '待機',
+        description: selector ? `Wait for element "${selector}"` : 'Wait',
       };
 
-    // setViewport などの設定系は Gherkin に含めない
+    // Configuration-related operations like setViewport are not included in Gherkin
     case 'setViewport':
     case 'hover':
     case 'doubleClick':
@@ -108,7 +108,7 @@ function convertStepToAction(step: ChromeRecorderStep): ParsedAction | null {
 }
 
 /**
- * セレクタ配列から最適なセレクタを抽出
+ * Extract optimal selector from selector array
  */
 function extractSelector(
   selectors?: string[][]
@@ -117,12 +117,12 @@ function extractSelector(
     return undefined;
   }
 
-  // 最初のセレクタチェーンを使用
+  // Use first selector chain
   const selectorChain = selectors[0];
   if (!selectorChain || selectorChain.length === 0) {
     return undefined;
   }
 
-  // 最も具体的なセレクタ（最後の要素）を返す
+  // Return most specific selector (last element)
   return selectorChain[selectorChain.length - 1];
 }
