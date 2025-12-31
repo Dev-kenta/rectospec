@@ -33,7 +33,7 @@ Examples:
   $ rectospec compile test.feature --no-typescript
 
 Documentation:
-  https://github.com/rectospec/rectospec
+  https://github.com/Dev-kenta/rectospec
 
 Get started:
   1. Setup: rectospec init

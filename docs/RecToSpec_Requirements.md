@@ -1224,7 +1224,7 @@ npm install -g rectospec
 
 | 項目 | 値 |
 | --- | --- |
-| **GitHub** | `rectospec/rectospec` |
+| **GitHub** | `Dev-kenta/rectospec` |
 | **npm** | `rectospec` |
 | **ライセンス** | MIT |
 
@@ -1232,7 +1232,7 @@ npm install -g rectospec
 
 ## 次のアクション
 
-- [ ]  GitHubリポジトリ作成（`rectospec/rectospec`）
+- [ ]  GitHubリポジトリ作成（`Dev-kenta/rectospec`）
 - [ ]  npmパッケージ名予約（`rectospec`）
 - [ ]  プロジェクト初期セットアップ
 - [ ]  Vercel AI SDK統合（Gemini + Claude）

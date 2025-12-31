@@ -11,7 +11,7 @@
     "ai",
     "test-automation"
   ],
-  "author": "Kenta Kataoka",
+  "author": "Dev-kenta",
   "license": "MIT",
   "bin": {
     "rectospec": "./dist/index.js"
