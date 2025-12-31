@@ -1,8 +1,10 @@
-import { generateText } from 'ai';
+import { generateText, generateObject } from 'ai';
 import { google } from '@ai-sdk/google';
+import { z } from 'zod';
 import { ParsedRecording } from '../parser/types.js';
 import { LLMError, ConfigError } from '../utils/errors.js';
 import { buildGherkinPrompt, GherkinGenerationOptions } from './prompts/gherkin-prompt.js';
+import { buildPlaywrightPrompt, PlaywrightGenerationOptions } from './prompts/playwright-prompt.js';
 import { configManager } from '../config/manager.js';
 
 /**
@@ -107,4 +109,79 @@ function extractGherkinFromResponse(response: string): string {
 
   // Return as is if no code block
   return response.trim();
+}
+
+/**
+ * Generated Playwright code structure
+ */
+export interface GeneratedPlaywrightCode {
+  pageObject: {
+    filename: string;
+    code: string;
+  };
+  testSpec: {
+    filename: string;
+    code: string;
+  };
+  testData: {
+    filename: string;
+    code: string;
+  };
+}
+
+/**
+ * Zod schema for Playwright code generation
+ */
+const PlaywrightCodeSchema = z.object({
+  pageObject: z.object({
+    filename: z.string(),
+    code: z.string(),
+  }),
+  testSpec: z.object({
+    filename: z.string(),
+    code: z.string(),
+  }),
+  testData: z.object({
+    filename: z.string(),
+    code: z.string(),
+  }),
+});
+
+/**
+ * Generate Playwright test code from Gherkin
+ */
+export async function generatePlaywright(
+  gherkinContent: string,
+  options: PlaywrightGenerationOptions,
+  config: Partial<LLMConfig> = {}
+): Promise<GeneratedPlaywrightCode> {
+  const provider = config.provider || 'google';
+  const modelName = config.model || DEFAULT_MODELS[provider];
+
+  // Get API key (environment variable > config file)
+  await getApiKey(provider);
+
+  try {
+    const prompt = buildPlaywrightPrompt(gherkinContent, options);
+
+    const { object } = await generateObject({
+      model: google(modelName),
+      schema: PlaywrightCodeSchema,
+      prompt,
+      temperature: 0.3,
+    });
+
+    return object;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new LLMError(
+        `Failed to generate Playwright code: ${error.message}`,
+        provider
+      );
+    }
+    throw new LLMError(
+      'Unknown error occurred during Playwright code generation',
+      provider
+    );
+  }
 }

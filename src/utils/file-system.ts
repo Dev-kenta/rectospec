@@ -3,12 +3,12 @@ import path from 'path';
 import { FileSystemError } from './errors.js';
 
 /**
- * Read JSON file
+ * Read text file
  */
-export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
+export async function readTextFile(filePath: string): Promise<string> {
   try {
     const content = await fs.readFile(filePath, 'utf-8');
-    return JSON.parse(content) as T;
+    return content;
   } catch (error) {
     if (error instanceof Error) {
       if ('code' in error && error.code === 'ENOENT') {
@@ -21,6 +21,23 @@ export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
       );
     }
     throw new FileSystemError('Unknown error occurred');
+  }
+}
+
+/**
+ * Read JSON file
+ */
+export async function readJsonFile<T = unknown>(filePath: string): Promise<T> {
+  const content = await readTextFile(filePath);
+  try {
+    return JSON.parse(content) as T;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new FileSystemError(
+        `Failed to parse JSON: ${error.message}`
+      );
+    }
+    throw new FileSystemError('Unknown error occurred during JSON parsing');
   }
 }
 

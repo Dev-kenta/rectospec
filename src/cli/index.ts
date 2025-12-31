@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import { config } from 'dotenv';
 import { setupGenerateCommand } from './commands/generate.js';
 import { setupInitCommand } from './commands/init.js';
+import { setupCompileCommand } from './commands/compile.js';
 
 // Load .env file
 config();
@@ -16,6 +17,7 @@ program
 // Setup commands
 setupInitCommand(program);
 setupGenerateCommand(program);
+setupCompileCommand(program);
 
 // Customize help text
 program.addHelpText(
@@ -27,6 +29,8 @@ Examples:
   $ rectospec generate recording.json -o test.feature
   $ rectospec generate recording.json --lang en
   $ rectospec generate recording.json --no-edge-cases
+  $ rectospec compile test.feature -o ./tests
+  $ rectospec compile test.feature --no-typescript
 
 Documentation:
   https://github.com/rectospec/rectospec
@@ -35,6 +39,7 @@ Get started:
   1. Setup: rectospec init
   2. Record browser actions with Chrome Recorder and export as JSON
   3. Generate Gherkin: rectospec generate recording.json
+  4. Compile to Playwright: rectospec compile test.feature
 `
 );
 
