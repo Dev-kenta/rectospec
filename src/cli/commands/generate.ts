@@ -5,12 +5,13 @@ import { generateGherkin } from '../../llm/provider.js';
 import { readJsonFile, writeTextFile, resolveOutputPath } from '../../utils/file-system.js';
 import { logger } from '../../utils/logger.js';
 import { RecToSpecError } from '../../utils/errors.js';
+import { ProviderName } from '../../config/types.js';
 
 interface GenerateOptions {
   output?: string;
   lang: 'ja' | 'en';
   edgeCases: boolean;
-  provider: 'google';
+  provider: ProviderName;
   model?: string;
 }
 
@@ -22,7 +23,7 @@ export function setupGenerateCommand(program: Command): void {
     .option('-o, --output <path>', 'Output file path')
     .option('--lang <language>', 'Language (ja/en)', 'ja')
     .option('--no-edge-cases', 'Do not generate edge case scenarios')
-    .option('-p, --provider <provider>', 'LLM provider', 'google')
+    .option('-p, --provider <provider>', 'LLM provider (google/anthropic)', 'google')
     .option('-m, --model <model>', 'Model name')
     .action(async (recordingFile: string, options: GenerateOptions) => {
       try {

@@ -4,12 +4,13 @@ import { generatePlaywright } from '../../llm/provider.js';
 import { readTextFile, writeTextFile } from '../../utils/file-system.js';
 import { logger } from '../../utils/logger.js';
 import { RecToSpecError } from '../../utils/errors.js';
+import { ProviderName } from '../../config/types.js';
 
 interface CompileOptions {
   output?: string;
   typescript: boolean;
   framework: 'playwright';
-  provider: 'google';
+  provider: ProviderName;
   model?: string;
 }
 
@@ -21,7 +22,7 @@ export function setupCompileCommand(program: Command): void {
     .option('-o, --output <directory>', 'Output directory path', './tests')
     .option('--no-typescript', 'Generate JavaScript instead of TypeScript')
     .option('--framework <framework>', 'Test framework (playwright)', 'playwright')
-    .option('-p, --provider <provider>', 'LLM provider', 'google')
+    .option('-p, --provider <provider>', 'LLM provider (google/anthropic)', 'google')
     .option('-m, --model <model>', 'Model name')
     .action(async (featureFile: string, options: CompileOptions) => {
       try {

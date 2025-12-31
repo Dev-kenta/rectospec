@@ -67,13 +67,12 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
       message: 'Select LLM provider:',
       choices: [
         {
-          name: 'Google Gemini (Recommended)',
+          name: 'Google Gemini (Free tier available)',
           value: 'google',
         },
         {
-          name: 'Anthropic Claude (Not implemented yet)',
+          name: 'Anthropic Claude (High quality)',
           value: 'anthropic',
-          disabled: true,
         },
       ],
       default: 'google',
@@ -81,8 +80,20 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
     {
       type: 'password',
       name: 'googleApiKey',
-      message: 'Enter Google Gemini API key:',
+      message: 'Enter Google Gemini API key (Get it at: https://aistudio.google.com/app/apikey):',
       when: (answers) => answers.provider === 'google',
+      validate: (input: string) => {
+        if (!input || input.trim() === '') {
+          return 'Please enter an API key';
+        }
+        return true;
+      },
+    },
+    {
+      type: 'password',
+      name: 'anthropicApiKey',
+      message: 'Enter Anthropic API key (Get it at: https://console.anthropic.com/account/keys):',
+      when: (answers) => answers.provider === 'anthropic',
       validate: (input: string) => {
         if (!input || input.trim() === '') {
           return 'Please enter an API key';
@@ -115,6 +126,8 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
     // Save API key
     if (answers.provider === 'google' && answers.googleApiKey) {
       await configManager.saveApiKey('google', answers.googleApiKey);
+    } else if (answers.provider === 'anthropic' && answers.anthropicApiKey) {
+      await configManager.saveApiKey('anthropic', answers.anthropicApiKey);
     }
 
     // Update other settings
