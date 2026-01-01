@@ -322,7 +322,7 @@ See [LICENSE](LICENSE) for details.
 ## Links
 
 - **GitHub Repository**: https://github.com/Dev-kenta/rectospec
-- **npm Package**: https://www.npmjs.com/package/rectospec (coming soon)
+- **npm Package**: https://www.npmjs.com/package/rectospec
 - **Issues**: https://github.com/Dev-kenta/rectospec/issues
 - **Documentation**: https://github.com/Dev-kenta/rectospec/wiki (coming soon)
 
