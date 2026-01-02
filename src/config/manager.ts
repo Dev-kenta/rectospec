@@ -6,38 +6,64 @@ import { DEFAULT_CONFIG } from './defaults.js';
 import { ConfigError } from '../utils/errors.js';
 
 /**
+ * Configuration scope
+ */
+export type ConfigScope = 'local' | 'global';
+
+/**
  * Configuration file paths
  */
-const CONFIG_DIR = path.join(os.homedir(), '.rectospec');
-const CONFIG_FILE = path.join(CONFIG_DIR, 'config.json');
+const GLOBAL_CONFIG_DIR = path.join(os.homedir(), '.rectospec');
+const GLOBAL_CONFIG_FILE = path.join(GLOBAL_CONFIG_DIR, 'config.json');
+const LOCAL_CONFIG_DIR = '.rectospec';
+const LOCAL_CONFIG_FILE = path.join(LOCAL_CONFIG_DIR, 'config.json');
 
 /**
  * Configuration manager class
  */
 export class ConfigManager {
   /**
-   * Check if configuration file exists
+   * Get configuration file path (priority: local > global)
    */
-  async exists(): Promise<boolean> {
+  private async findConfigPath(): Promise<string | null> {
+    // 1. Check local config
     try {
-      await fs.access(CONFIG_FILE);
-      return true;
+      await fs.access(LOCAL_CONFIG_FILE);
+      return LOCAL_CONFIG_FILE;
     } catch {
-      return false;
+      // Local config not found
     }
+
+    // 2. Check global config
+    try {
+      await fs.access(GLOBAL_CONFIG_FILE);
+      return GLOBAL_CONFIG_FILE;
+    } catch {
+      // Global config not found
+    }
+
+    return null;
   }
 
   /**
-   * Load configuration
+   * Check if configuration file exists
+   */
+  async exists(): Promise<boolean> {
+    const configPath = await this.findConfigPath();
+    return configPath !== null;
+  }
+
+  /**
+   * Load configuration (priority: local > global)
    */
   async load(): Promise<RecToSpecConfig> {
     try {
-      const exists = await this.exists();
-      if (!exists) {
+      const configPath = await this.findConfigPath();
+      if (!configPath) {
         return DEFAULT_CONFIG;
       }
 
-      const content = await fs.readFile(CONFIG_FILE, 'utf-8');
+      const content = await fs.readFile(configPath, 'utf-8');
       const json = JSON.parse(content);
 
       // Validate with Zod
@@ -62,18 +88,23 @@ export class ConfigManager {
 
   /**
    * Save configuration
+   * @param config - Configuration to save
+   * @param scope - Configuration scope ('local' or 'global'). Defaults to 'local'.
    */
-  async save(config: RecToSpecConfig): Promise<void> {
+  async save(config: RecToSpecConfig, scope: ConfigScope = 'local'): Promise<void> {
     try {
+      const configDir = scope === 'local' ? LOCAL_CONFIG_DIR : GLOBAL_CONFIG_DIR;
+      const configFile = scope === 'local' ? LOCAL_CONFIG_FILE : GLOBAL_CONFIG_FILE;
+
       // Create directory if it doesn't exist
-      await fs.mkdir(CONFIG_DIR, { recursive: true });
+      await fs.mkdir(configDir, { recursive: true });
 
       // Format and save JSON
       const content = JSON.stringify(config, null, 2);
-      await fs.writeFile(CONFIG_FILE, content, { mode: 0o600 }); // Save with 600 permissions
+      await fs.writeFile(configFile, content, { mode: 0o600 }); // Save with 600 permissions
 
       // Explicitly set permissions (just in case)
-      await fs.chmod(CONFIG_FILE, 0o600);
+      await fs.chmod(configFile, 0o600);
     } catch (error) {
       if (error instanceof Error) {
         throw new ConfigError(`Failed to save configuration: ${error.message}`);
@@ -84,8 +115,10 @@ export class ConfigManager {
 
   /**
    * Update configuration (partial update)
+   * @param partialConfig - Partial configuration to merge
+   * @param scope - Configuration scope ('local' or 'global'). Defaults to 'local'.
    */
-  async update(partialConfig: PartialConfig): Promise<RecToSpecConfig> {
+  async update(partialConfig: PartialConfig, scope: ConfigScope = 'local'): Promise<RecToSpecConfig> {
     const currentConfig = await this.load();
 
     const updatedConfig: RecToSpecConfig = {
@@ -109,21 +142,24 @@ export class ConfigManager {
       },
     };
 
-    await this.save(updatedConfig);
+    await this.save(updatedConfig, scope);
     return updatedConfig;
   }
 
   /**
    * Save API key
+   * @param provider - LLM provider name
+   * @param apiKey - API key value
+   * @param scope - Configuration scope ('local' or 'global'). Defaults to 'local'.
    */
-  async saveApiKey(provider: ProviderName, apiKey: string): Promise<void> {
+  async saveApiKey(provider: ProviderName, apiKey: string, scope: ConfigScope = 'local'): Promise<void> {
     await this.update({
       llm: {
         apiKeys: {
           [provider]: apiKey,
         },
       },
-    });
+    }, scope);
   }
 
   /**
@@ -147,10 +183,18 @@ export class ConfigManager {
   }
 
   /**
-   * Get configuration file path
+   * Get configuration file path (returns the currently active config path)
+   * Priority: local > global
    */
-  getConfigPath(): string {
-    return CONFIG_FILE;
+  async getConfigPath(): Promise<string | null> {
+    return await this.findConfigPath();
+  }
+
+  /**
+   * Get specific scope configuration file path
+   */
+  getConfigPathByScope(scope: ConfigScope): string {
+    return scope === 'local' ? LOCAL_CONFIG_FILE : GLOBAL_CONFIG_FILE;
   }
 }
 

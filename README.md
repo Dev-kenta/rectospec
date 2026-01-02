@@ -56,7 +56,16 @@ npm install -g rectospec
 rectospec init
 ```
 
-Select your LLM provider (Google Gemini or Anthropic Claude) and enter your API key.
+The interactive setup will guide you through:
+- **Configuration Scope**: Choose between local (project-specific) or global (all projects)
+- **LLM Provider**: Select Google Gemini (free tier) or Anthropic Claude (high quality)
+- **API Key**: Enter your provider-specific API key
+- **Language**: Choose Gherkin output language (Japanese or English)
+- **Edge Cases**: Enable/disable automatic edge case generation
+
+**Configuration Files**:
+- Local: `./.rectospec/config.json` (project-specific, recommended)
+- Global: `~/.rectospec/config.json` (shared across all projects)
 
 ### 2. Record Browser Actions
 
@@ -188,9 +197,9 @@ rectospec compile login.feature -o ./e2e --no-typescript
 
 ### API Key Setup
 
-RecToSpec supports three methods for API key configuration (in priority order):
+RecToSpec supports four methods for API key configuration (in priority order):
 
-#### 1. Environment Variables (Recommended for CI/CD)
+#### 1. Environment Variables (Highest Priority - Recommended for CI/CD)
 
 ```bash
 # Google Gemini
@@ -200,7 +209,7 @@ export GOOGLE_GENERATIVE_AI_API_KEY=your-api-key
 export ANTHROPIC_API_KEY=your-api-key
 ```
 
-#### 2. `.env` File (Project-local)
+#### 2. `.env` File
 
 Create a `.env` file in your project root:
 
@@ -210,9 +219,19 @@ GOOGLE_GENERATIVE_AI_API_KEY=your-api-key
 ANTHROPIC_API_KEY=your-api-key
 ```
 
-#### 3. Global Config File
+#### 3. Project-Local Config (Recommended for Team Projects)
 
-Run `rectospec init` to store API keys in `~/.rectospec/config.json` (automatically created with secure permissions).
+Run `rectospec init` and select **Local** scope:
+- Creates `./.rectospec/config.json` in your project directory
+- Project-specific configuration
+- Add `.rectospec/` to `.gitignore` to prevent API key leaks
+
+#### 4. Global Config (Lowest Priority - Personal Use)
+
+Run `rectospec init` and select **Global** scope:
+- Creates `~/.rectospec/config.json` in your home directory
+- Shared across all projects
+- Automatically created with secure permissions (mode 600)
 
 ### Supported LLM Providers
 
