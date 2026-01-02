@@ -49,3 +49,6 @@ input/
 
 # Development activity logs
 activity_logs/
+
+# Project-local configuration (may contain API keys)
+.rectospec/

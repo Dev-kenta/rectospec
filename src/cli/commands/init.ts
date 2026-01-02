@@ -1,11 +1,12 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { configManager } from '../../config/manager.js';
+import { configManager, ConfigScope } from '../../config/manager.js';
 import { ProviderName } from '../../config/types.js';
 import { logger } from '../../utils/logger.js';
 import { RecToSpecError } from '../../utils/errors.js';
 
 interface InitAnswers {
+  scope: ConfigScope;
   provider: ProviderName;
   googleApiKey?: string;
   anthropicApiKey?: string;
@@ -61,6 +62,22 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
 
   // Interactive setup
   const answers = await inquirer.prompt<InitAnswers>([
+    {
+      type: 'list',
+      name: 'scope',
+      message: 'Configuration scope:',
+      choices: [
+        {
+          name: 'Local (current project only - ./.rectospec/config.json)',
+          value: 'local',
+        },
+        {
+          name: 'Global (all projects - ~/.rectospec/config.json)',
+          value: 'global',
+        },
+      ],
+      default: 'local',
+    },
     {
       type: 'list',
       name: 'provider',
@@ -125,9 +142,9 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
   try {
     // Save API key
     if (answers.provider === 'google' && answers.googleApiKey) {
-      await configManager.saveApiKey('google', answers.googleApiKey);
+      await configManager.saveApiKey('google', answers.googleApiKey, answers.scope);
     } else if (answers.provider === 'anthropic' && answers.anthropicApiKey) {
-      await configManager.saveApiKey('anthropic', answers.anthropicApiKey);
+      await configManager.saveApiKey('anthropic', answers.anthropicApiKey, answers.scope);
     }
 
     // Update other settings
@@ -139,12 +156,12 @@ async function executeInit(options: { force?: boolean }): Promise<void> {
       generation: {
         includeEdgeCases: answers.includeEdgeCases,
       },
-    });
+    }, answers.scope);
 
     spinner.succeed('Configuration saved');
 
     // Display config file path
-    const configPath = configManager.getConfigPath();
+    const configPath = configManager.getConfigPathByScope(answers.scope);
     logger.info(`Config file: ${configPath}`);
 
     console.log('');
