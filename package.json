@@ -50,7 +50,7 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm test -- --run"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.2",
