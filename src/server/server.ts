@@ -1,8 +1,14 @@
 import express, { Express } from 'express';
 import { Server } from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { ServerConfig, ServerConfigSchema, ServerInstance } from './types.js';
 import { findAvailablePort } from '../utils/port-finder.js';
 import { logger } from '../utils/logger.js';
+
+// Get current directory in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Editor server for serving the web-based Gherkin editor
@@ -25,6 +31,10 @@ export class EditorServer {
   private setupMiddleware(): void {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+
+    // Serve static files from public directory
+    const publicDir = path.join(__dirname, 'public');
+    this.app.use(express.static(publicDir));
   }
 
   /**
