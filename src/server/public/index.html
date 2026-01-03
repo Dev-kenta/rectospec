@@ -13,17 +13,22 @@
   </header>
 
   <main class="main">
-    <div class="editor-placeholder">
-      <div class="loading-message">
-        <h2>Editor Loading...</h2>
-        <p>The Ace Editor will be integrated in the next PR.</p>
-        <p>This is a placeholder interface for PR #2: Basic Edit Command</p>
-      </div>
+    <div class="editor-wrapper">
+      <div id="status-message" class="status-message"></div>
+      <div id="editor-container" class="editor-container"></div>
     </div>
   </main>
 
   <footer class="footer">
     <p>Powered by RecToSpec | <a href="https://github.com/Dev-kenta/rectospec" target="_blank">GitHub</a></p>
   </footer>
+
+  <!-- Ace Editor (local files) -->
+  <script src="/ace/ace.js"></script>
+  <script src="/ace/mode-gherkin.js"></script>
+  <script src="/ace/theme-monokai.js"></script>
+
+  <!-- Application JavaScript -->
+  <script src="/editor.js"></script>
 </body>
 </html>

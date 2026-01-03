@@ -16,7 +16,7 @@ export function setupEditCommand(program: Command): void {
     .command('edit')
     .description('Edit Gherkin feature file in browser')
     .argument('<file>', 'Path to Gherkin feature file')
-    .option('-p, --port <number>', 'Server port', '3000')
+    .option('-p, --port <number>', 'Server port', parseInt, 3000)
     .option('--no-open', 'Do not open browser automatically')
     .action(async (file: string, options: EditOptions) => {
       try {
@@ -74,7 +74,8 @@ async function executeEdit(
     // 3. Open browser
     if (options.open) {
       const browserSpinner = logger.spinner('Opening browser...');
-      await open(instance.url);
+      const editorUrl = `${instance.url}?file=${encodeURIComponent(filePath)}`;
+      await open(editorUrl);
       browserSpinner.succeed('Browser opened');
     }
 
