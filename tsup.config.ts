@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import { cp } from 'fs/promises';
 
 export default defineConfig({
   entry: ['src/cli/index.ts'],
@@ -10,5 +11,10 @@ export default defineConfig({
   outDir: 'dist',
   banner: {
     js: '#!/usr/bin/env node',
+  },
+  async onSuccess() {
+    // Copy static files to dist
+    await cp('src/server/public', 'dist/server/public', { recursive: true });
+    console.log('✓ Static files copied to dist/server/public');
   },
 });
