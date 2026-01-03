@@ -71,6 +71,41 @@ body {
   color: white;
 }
 
+.toolbar {
+  background-color: #ecf0f1;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid #bdc3c7;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+}
+
 .editor-container {
   flex: 1;
   width: 100%;

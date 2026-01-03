@@ -23,6 +23,15 @@ function initializeEditor() {
 
   // Set read-only until file is loaded
   editor.setReadOnly(true);
+
+  // Add Ctrl+S (Cmd+S on Mac) keyboard shortcut for saving
+  editor.commands.addCommand({
+    name: 'save',
+    bindKey: { win: 'Ctrl-S', mac: 'Command-S' },
+    exec: function() {
+      saveFile();
+    }
+  });
 }
 
 /**
@@ -79,6 +88,43 @@ function showStatus(message, type = 'info') {
 }
 
 /**
+ * Save file content to server
+ */
+async function saveFile() {
+  try {
+    if (!currentFilePath) {
+      showStatus('No file loaded', 'error');
+      return;
+    }
+
+    showStatus('Saving...', 'info');
+
+    const content = editor.getValue();
+    const response = await fetch('/api/file', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        path: currentFilePath,
+        content: content,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to save file');
+    }
+
+    showStatus('Saved successfully!', 'success');
+  } catch (error) {
+    showStatus(`Save error: ${error.message}`, 'error');
+    console.error('Failed to save file:', error);
+  }
+}
+
+/**
  * Initialize application
  */
 async function initialize() {
@@ -95,6 +141,12 @@ async function initialize() {
 
   // Load file
   await loadFile(filePath);
+
+  // Setup save button
+  const saveButton = document.getElementById('save-button');
+  if (saveButton) {
+    saveButton.addEventListener('click', saveFile);
+  }
 }
 
 // Start application when DOM is ready

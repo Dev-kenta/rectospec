@@ -80,4 +80,95 @@ describe('File API', () => {
       expect(data.error).toBe('File not found');
     });
   });
+
+  describe('POST /api/file', () => {
+    it('should save file content successfully', async () => {
+      const newContent = 'Feature: Updated\n  Scenario: New scenario\n';
+      const response = await fetch(
+        `${instance!.url}/api/file`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            path: testFile,
+            content: newContent,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.message).toBe('File saved successfully');
+      expect(data.path).toBe(testFile);
+
+      // Verify file was actually written
+      const readResponse = await fetch(
+        `${instance!.url}/api/file?path=${encodeURIComponent(testFile)}`
+      );
+      const readData = await readResponse.json();
+      expect(readData.content).toBe(newContent);
+    });
+
+    it('should return 400 if file path is missing', async () => {
+      const response = await fetch(
+        `${instance!.url}/api/file`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            content: 'test',
+          }),
+        }
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('File path is required');
+    });
+
+    it('should return 400 if content is missing', async () => {
+      const response = await fetch(
+        `${instance!.url}/api/file`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            path: testFile,
+          }),
+        }
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('Content is required');
+    });
+
+    it('should return 400 if file is not a .feature file', async () => {
+      const invalidFile = path.join(testDir, 'test.txt');
+      const response = await fetch(
+        `${instance!.url}/api/file`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            path: invalidFile,
+            content: 'test',
+          }),
+        }
+      );
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('Invalid file type');
+    });
+  });
 });
