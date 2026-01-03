@@ -74,7 +74,8 @@ async function executeEdit(
     // 3. Open browser
     if (options.open) {
       const browserSpinner = logger.spinner('Opening browser...');
-      await open(instance.url);
+      const editorUrl = `${instance.url}?file=${encodeURIComponent(filePath)}`;
+      await open(editorUrl);
       browserSpinner.succeed('Browser opened');
     }
 
