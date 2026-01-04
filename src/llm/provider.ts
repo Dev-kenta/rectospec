@@ -6,6 +6,7 @@ import { ParsedRecording } from '../parser/types.js';
 import { LLMError, ConfigError } from '../utils/errors.js';
 import { buildGherkinPrompt, GherkinGenerationOptions } from './prompts/gherkin-prompt.js';
 import { buildPlaywrightPrompt, PlaywrightGenerationOptions } from './prompts/playwright-prompt.js';
+import { buildSuggestionPrompt, SuggestionOptions } from './prompts/suggestion-prompt.js';
 import { configManager } from '../config/manager.js';
 import { ProviderName } from '../config/types.js';
 
@@ -216,6 +217,49 @@ export async function generatePlaywright(
     }
     throw new LLMError(
       'Unknown error occurred during Playwright code generation',
+      provider
+    );
+  }
+}
+
+/**
+ * Generate Gherkin improvement suggestions
+ */
+export async function generateSuggestion(
+  options: SuggestionOptions,
+  config: Partial<LLMConfig> = {}
+): Promise<string> {
+  const provider = config.provider || 'google';
+  const modelName = config.model || DEFAULT_MODELS[provider];
+
+  // Get API key (environment variable > config file)
+  await getApiKey(provider);
+
+  try {
+    const prompt = buildSuggestionPrompt(options);
+    const model = getModel(provider, modelName);
+
+    const { text } = await generateText({
+      model,
+      system: 'You are a QA engineer expert in BDD and Gherkin.',
+      prompt,
+      temperature: 0.3,
+      maxTokens: 4000,
+    });
+
+    // Extract Gherkin from code block
+    const gherkin = extractGherkinFromResponse(text);
+
+    return gherkin;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new LLMError(
+        `Failed to generate suggestion: ${error.message}`,
+        provider
+      );
+    }
+    throw new LLMError(
+      'Unknown error occurred during suggestion generation',
       provider
     );
   }

@@ -6,6 +6,7 @@ import { ServerConfig, ServerConfigSchema, ServerInstance } from './types.js';
 import { findAvailablePort } from '../utils/port-finder.js';
 import { logger } from '../utils/logger.js';
 import { fileApiRouter } from './routes/file-api.js';
+import { suggestionApiRouter } from './routes/suggestion-api.js';
 
 // Get current directory in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,9 @@ export class EditorServer {
 
     // File API routes
     this.app.use('/api', fileApiRouter);
+
+    // Suggestion API routes
+    this.app.use('/api', suggestionApiRouter);
   }
 
   /**
