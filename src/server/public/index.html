@@ -19,8 +19,64 @@
         <button id="save-button" class="btn btn-primary">
           Save (Ctrl+S)
         </button>
+        <button id="toggle-suggestion-panel" class="btn btn-secondary">
+          AI Suggestions
+        </button>
       </div>
-      <div id="editor-container" class="editor-container"></div>
+      <div class="content-layout">
+        <div id="editor-container" class="editor-container"></div>
+
+        <aside id="suggestion-panel" class="suggestion-panel hidden">
+          <div class="panel-header">
+            <h2>AI Suggestions</h2>
+            <button id="close-panel" class="btn-close">&times;</button>
+          </div>
+
+          <div class="panel-content">
+            <div class="panel-section">
+              <label for="language-select" class="label">Output Language</label>
+              <select id="language-select" class="select">
+                <option value="en">English</option>
+                <option value="ja">Japanese</option>
+              </select>
+            </div>
+
+            <div class="panel-section">
+              <label for="focus-area-select" class="label">Focus Area</label>
+              <select id="focus-area-select" class="select">
+                <option value="all">All (Comprehensive)</option>
+                <option value="clarity">Clarity</option>
+                <option value="completeness">Completeness</option>
+                <option value="best-practices">Best Practices</option>
+              </select>
+            </div>
+
+            <button id="get-suggestion-button" class="btn btn-primary btn-block">
+              Get Suggestion
+            </button>
+
+            <div id="suggestion-loading" class="suggestion-loading hidden">
+              <div class="spinner"></div>
+              <p>Generating suggestion...</p>
+            </div>
+
+            <div id="suggestion-preview" class="suggestion-preview hidden">
+              <h3 class="preview-title">Suggested Improvements</h3>
+              <div id="suggestion-content" class="suggestion-content"></div>
+              <div class="suggestion-actions">
+                <button id="apply-suggestion" class="btn btn-success">
+                  Apply
+                </button>
+                <button id="reject-suggestion" class="btn btn-secondary">
+                  Reject
+                </button>
+              </div>
+            </div>
+
+            <div id="suggestion-error" class="suggestion-error hidden"></div>
+          </div>
+        </aside>
+      </div>
     </div>
   </main>
 
@@ -35,5 +91,6 @@
 
   <!-- Application JavaScript -->
   <script src="/editor.js"></script>
+  <script src="/suggestion-panel.js"></script>
 </body>
 </html>
