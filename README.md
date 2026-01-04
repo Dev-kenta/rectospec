@@ -12,6 +12,7 @@
 
 - 🤖 **AI-Powered Code Generation** - Leverage Google Gemini or Anthropic Claude for intelligent test code creation
 - 🔄 **Complete E2E Workflow** - Chrome Recorder → Gherkin → Playwright in a single pipeline
+- ✏️ **Web-Based Editor** - Edit Gherkin files with syntax highlighting and AI-powered suggestions
 - 🛠️ **Developer-Friendly CLI** - Interactive setup and intuitive commands
 
 ---
@@ -116,6 +117,9 @@ rectospec init
 # Generate Gherkin from Chrome Recorder
 rectospec generate login-recording.json
 
+# Edit Gherkin with AI suggestions (optional)
+rectospec edit login.feature
+
 # Compile to Playwright
 rectospec compile login.feature -o ./tests
 ```
@@ -190,6 +194,45 @@ Generate Playwright test code from Gherkin specification.
 ```bash
 rectospec compile login.feature -o ./e2e --no-typescript
 ```
+
+### `rectospec edit <feature-file>`
+
+Open a web-based Gherkin editor with AI-powered suggestions.
+
+**Arguments:**
+- `<feature-file>` - Path to Gherkin feature file to edit
+
+**Options:**
+- `-p, --port <number>` - Server port (default: 3000)
+- `--no-open` - Do not open browser automatically
+
+**Features:**
+- 🎨 **Syntax Highlighting** - Gherkin syntax highlighting with Ace Editor
+- 💾 **Auto Save** - Save with Ctrl+S (Cmd+S on Mac) or Save button
+- 🤖 **AI Suggestions** - Get AI-powered improvement suggestions
+  - **Focus Areas**: Clarity, Completeness, Best Practices, or All
+  - **Languages**: Japanese or English output
+  - **Apply/Reject**: Preview and apply suggestions with one click
+
+**Example:**
+```bash
+# Open editor on default port (3000)
+rectospec edit login.feature
+
+# Use custom port
+rectospec edit login.feature -p 8080
+
+# Don't open browser automatically
+rectospec edit login.feature --no-open
+```
+
+**AI Suggestion Workflow:**
+1. Click "AI Suggestions" button in toolbar
+2. Select output language (Japanese/English)
+3. Choose focus area for improvements
+4. Click "Get Suggestion" to generate AI improvements
+5. Review the suggested changes
+6. Click "Apply" to use the suggestion or "Reject" to discard
 
 ---
 
