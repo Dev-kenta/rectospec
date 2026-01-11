@@ -85,6 +85,10 @@ export class EditorServer {
       const url = `http://${this.config.host}:${port}`;
       logger.success(`Server started at ${url}`);
 
+      if (!this.server) {
+        throw new Error('Server failed to initialize');
+      }
+
       return {
         server: this.server,
         port,
