@@ -1,7 +1,7 @@
 import { generateText, generateObject } from 'ai';
 import { google } from '@ai-sdk/google';
 import { anthropic } from '@ai-sdk/anthropic';
-import { z } from 'zod';
+import { z } from 'zod/v3';
 import { ParsedRecording } from '../parser/types.js';
 import { LLMError, ConfigError } from '../utils/errors.js';
 import { buildGherkinPrompt, GherkinGenerationOptions } from './prompts/gherkin-prompt.js';
@@ -111,7 +111,7 @@ export async function generateGherkin(
       system: 'You are a QA engineer expert in BDD and Gherkin.',
       prompt,
       temperature: 0.3,
-      maxTokens: 4000,
+      maxOutputTokens: 4000,
     });
 
     // Extract Gherkin from code block
@@ -244,7 +244,7 @@ export async function generateSuggestion(
       system: 'You are a QA engineer expert in BDD and Gherkin.',
       prompt,
       temperature: 0.3,
-      maxTokens: 4000,
+      maxOutputTokens: 4000,
     });
 
     // Extract Gherkin from code block
