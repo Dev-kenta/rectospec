@@ -42,7 +42,14 @@ src/
 │   ├── index.ts         # Main CLI setup (Commander.js)
 │   └── commands/        # Command implementations
 │       ├── init.ts      # Interactive configuration setup
-│       └── generate.ts  # Chrome Recorder JSON → Gherkin
+│       ├── init-config.ts # Playwright config generation
+│       ├── generate.ts  # Chrome Recorder JSON → Gherkin
+│       ├── compile.ts   # Gherkin → Playwright code
+│       └── edit.ts      # Web-based Gherkin editor
+├── generators/          # Code/config generators
+│   └── config-generator.ts # Playwright config orchestrator
+├── templates/           # Template-based generators
+│   └── playwright-config.ts # Playwright config templates
 ├── parser/              # Chrome Recorder JSON parsing
 │   ├── types.ts         # Zod schemas for validation
 │   └── chrome-recorder.ts # Parser implementation
@@ -84,6 +91,20 @@ src/
 - `resolveOutputPath()` handles both relative and absolute paths via `path.resolve()`
 - Automatically creates directories when writing files
 - Output defaults to input directory with changed extension
+
+**Playwright Config Generation** (Template-based):
+- Template-based approach (no LLM calls) via `src/templates/playwright-config.ts`
+- Supports both TypeScript and JavaScript output formats
+- Orchestrated by `src/generators/config-generator.ts`
+- Features:
+  - Checks for existing config files (both .ts and .js)
+  - Never overwrites existing configurations
+  - Calculates correct relative testDir paths from project root
+  - Places config files at `process.cwd()` (Playwright standard convention)
+  - Optional baseURL injection
+  - CI-optimized defaults (retries, workers, reporters)
+- CLI command: `rectospec init-config`
+- Options: `--output`, `--base-url`, `--no-typescript`
 
 ## Language and Localization
 

@@ -33,6 +33,7 @@ Creating high-quality test automation requires both **test design expertise** an
 - ✅ **Chrome Recorder JSON Parsing** - Converts browser recordings into structured test scenarios
 - ✅ **AI-Powered Gherkin Generation** - Creates BDD specifications in Japanese or English
 - ✅ **Playwright Code Generation** - Produces TypeScript/JavaScript test code with Page Object Model pattern
+- ✅ **Playwright Config Generation** - Template-based configuration file generation with best practices
 - ✅ **Multiple LLM Providers** - Choose between Google Gemini (free tier) or Anthropic Claude (high quality)
 - ✅ **Interactive CLI Setup** - Easy configuration with guided prompts
 - ✅ **Flexible Output** - Supports both TypeScript and JavaScript
@@ -86,7 +87,26 @@ rectospec generate recording.json
 
 This creates a `.feature` file with Gherkin specification.
 
-### 4. Generate Playwright Test Code
+### 4. Generate Playwright Configuration (Optional)
+
+```bash
+rectospec init-config --output ./tests --base-url http://localhost:3000
+```
+
+This generates `playwright.config.ts` (or `.js`) with recommended defaults:
+- Test directory path matching your output location
+- CI-optimized settings (retries, workers)
+- Multi-browser support (Chromium, Firefox, WebKit)
+- HTML reporter with automatic screenshots and traces
+
+**Options**:
+- `--output <directory>` - Test directory path (default: `./tests`)
+- `--base-url <url>` - Base URL for your application
+- `--no-typescript` - Generate JavaScript config instead of TypeScript
+
+**Note**: This command will skip generation if a config file already exists.
+
+### 5. Generate Playwright Test Code
 
 ```bash
 rectospec compile test.feature -o ./tests
@@ -97,10 +117,9 @@ This generates:
 - Test spec file (`tests/specs/`)
 - Test data fixtures (`tests/fixtures/`)
 
-### 5. Run Tests
+### 6. Run Tests
 
 ```bash
-cd tests
 npx playwright test
 ```
 
