@@ -4,7 +4,7 @@
 
 [![npm version](https://img.shields.io/npm/v/rectospec.svg)](https://www.npmjs.com/package/rectospec)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.20.0-brightgreen)](https://nodejs.org/)
 
 **RecToSpec** is an AI-powered CLI tool that converts Chrome Recorder JSON into Gherkin specifications and Playwright test code.
 
@@ -46,7 +46,7 @@ Creating high-quality test automation requires both **test design expertise** an
 npm install -g rectospec
 ```
 
-**Requirements**: Node.js >= 18.0.0
+**Requirements**: Node.js >= 20.20.0 (with January 2026 security patches)
 
 ---
 
