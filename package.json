@@ -1,6 +1,6 @@
 {
   "name": "rectospec",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Chrome Recorder to Gherkin to Playwright - AI-powered test automation tool",
   "keywords": [
     "playwright",

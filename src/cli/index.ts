@@ -14,7 +14,7 @@ const program = new Command();
 program
   .name('rectospec')
   .description('Chrome Recorder to Gherkin to Playwright - AI-powered test automation tool')
-  .version('0.3.0');
+  .version('0.3.1');
 
 // Setup commands
 setupInitCommand(program);
